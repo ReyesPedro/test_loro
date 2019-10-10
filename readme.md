@@ -2,85 +2,84 @@
 
 Requisitos para proyecto
 
---Ubuntu Server
---Nginx
---PHP 7.2
---git
+--Ubuntu Server<br>
+--Nginx<br>
+--PHP 7.2<br>
+--git<br>
 
 
---Se agrega el repositorio
+--Se agrega el repositorio: <br>
 sudo add-apt-repository ppa:ondrej/php
 
 
---Se actualiza la lista de paquetes
+--Se actualiza la lista de paquetes: <br>
 sudo apt-get update
 
 
---Se instala mongodb (omitir si esta instalado)
-sudo apt-get install -y mongodb-server
+--Se instala mongodb (omitir si esta instalado): <br>
+sudo apt-get install -y mongodb-server 
 sudo apt-get install -y mongodb-org
 
 
---Se activa el servicio (omitir si esta instalado)
-sudo systemctl start mongodb
+--Se activa el servicio (omitir si esta instalado): <br>
+sudo systemctl start mongodb 
 sudo systemctl enable mongodb
 
---Se debe ingresar al shell de mongo
+--Se debe ingresar al shell de mongo:<br>
 mongo
---Se selecciona la base de datos admin
->use admin
---Se crea el usuario admin con role root (omitir si esta creado el usuario, tener encuenta en el archivo .env)
->db.createUser({user:"admin", pwd:"admin123", roles:[{role:"root", db:"admin"}]})
---Se crear la db para el REST
-use test_loro
---se sale del shell de mongo
->exit
+--Se selecciona la base de datos admin:<br>
+use admin<br> 
+--Se crea el usuario admin con role root (omitir si esta creado el usuario, tener encuenta en el archivo .env)::<br> 
+db.createUser({user:"admin", pwd:"admin123", roles:[{role:"root", db:"admin"}]})<br> 
+--Se crear la db para el REST: <br>
+use test_loro<br> 
+--se sale del shell de mongo: <br>
+exit
 
 
---Se recarga el servicio
-sudo systemctl daemon-reload
+--Se recarga el servicio:<br> 
+sudo systemctl daemon-reload 
+sudo service mongodb restart 
 
-sudo service mongodb restart
-
---Se prueba el acceso a mongo con el usuario admin
+--Se prueba el acceso a mongo con el usuario admin: <br> 
 mongo -u admin -p admin123 --authenticationDatabase admin
 
---Se debe buscar la siguiente linea en el archivo /lib/systemd/system/mongod.service y se agrega el argumento --auth
+--Se debe buscar la siguiente linea en el archivo /lib/systemd/system/mongod.service y se agrega el argumento "--auth" :<br> 
 
-Original : ExecStart=/usr/bin/mongod --unixSocketPrefix=${SOCKETPATH} --config ${CONF} $DAEMON_OPTS
-Modificada : ExecStart=/usr/bin/mongod --unixSocketPrefix=${SOCKETPATH} --auth --config ${CONF} $DAEMON_OPTS
+Original : ExecStart=/usr/bin/mongod --unixSocketPrefix=${SOCKETPATH} --config ${CONF} $DAEMON_OPTS <br> 
+Modificada : ExecStart=/usr/bin/mongod --unixSocketPrefix=${SOCKETPATH} --auth --config ${CONF} $DAEMON_OPTS <br> 
 
---Se instala php7.2 (omitir si esta instalado)
+--Se instala php7.2 (omitir si esta instalado): <br>
 sudo apt-get install php7.2 php7.2-bcmath php7.2-common php7.2-json php7.2-mbstring php7.2-xml php7.2-pgsql php7.2-curl php7.2-mongodb
 
---Se activa la libreria de mongodb en php.ini
-sudo bash
+--Se activa la libreria de mongodb en php.ini: <br>
+sudo bash <br> 
 sudo echo "extension=mongodb" >> /etc/php/7.2/fpm/php.ini
 
---Se deben activar las siguientes librerias en el archivo /etc/php/7.2/fpm/php.ini
+--Se deben activar las siguientes librerias en el archivo /etc/php/7.2/fpm/php.ini: <br>
 curl, mbstring, openssl, mongodb
 
---Se instala la última versión de nginx (omitir si esta instalado)
+--Se instala la última versión de nginx (omitir si esta instalado): <br>
 sudo apt-get install nginx
 
---Se instala la última versión de composer x
+--Se instala la última versión de composer x: <br>
 sudo apt-get install composer
 
 cd /var/www/html/
 
---Se crea la carpeta del repositorio
+--Se crea la carpeta del repositorio: <br>
 mkdir test_loro.com
 
---Se modifican los permisos temporalmente para evitar conflictos con ubuntu y composer
+--Se modifican los permisos temporalmente para evitar conflictos con ubuntu y composer: <br>
 sudo chown -R $USER:$USER test_loro.com/
 
---Se clona el proyecto del repositorio
+--Se clona el proyecto del repositorio: <br>
 git clone --single-branch --branch release/v1.0.0 https://github.com/ReyesPedro/test_loro.git test_loro.com
 
---Se reasignan los permisos 
+--Se reasignan los permisos <br>
 sudo chown -R $USER:www-data test_loro.com/
 
---Se ajustan los permisos de la carpeta del proyecto
+--Se ajustan los permisos de la carpeta del proyecto <br> 
 cd test_loro.com/
 
 sudo chmod -R 777 .
@@ -101,26 +100,26 @@ sudo chmod 775 -R bootstrap/
 
 sudo chmod 775 -R bootstrap/cache
 
---En el archivo .env se debe modificar lo siguiente ( los campos DB_USERNAME, DB_PASSWORD dependen si ya existe un usuario en el ambiente de producción, si no usar los mencionados)
+--En el archivo .env se debe modificar lo siguiente ( los campos DB_USERNAME, DB_PASSWORD dependen si ya existe un usuario en el ambiente de producción, si no usar los mencionados) <br> 
 
-APP_NAME=TestLoro
-APP_ENV=local
-APP_KEY=base64:05PgsUFchtXJBrxgxScn2R46gzIgjtxeRZLB32Lmnpw=
-APP_DEBUG=false
+APP_NAME=TestLoro<br>
+APP_ENV=local<br>
+APP_KEY=base64:05PgsUFchtXJBrxgxScn2R46gzIgjtxeRZLB32Lmnpw=<br>
+APP_DEBUG=false<br>
 
-DB_CONNECTION=mongodb
-DB_HOST=127.0.0.1
-DB_PORT=27017
-DB_DATABASE=test_loro
-DB_USERNAME=admin
-DB_PASSWORD=admin123
+DB_CONNECTION=mongodb<br>
+DB_HOST=127.0.0.1<br>
+DB_PORT=27017<br>
+DB_DATABASE=test_loro<br>
+DB_USERNAME=admin<br>
+DB_PASSWORD=admin123<br>
 
 
---Se obtienen las dependencias
+--Se obtienen las dependencias <br> 
 composer install
 
 
---Se crear el archivo test_loro.com.conf en la carpeta /etc/nginx/sites-available con el siguiente contenido recomendado por Laravel
+--Se crear el archivo test_loro.com.conf en la carpeta /etc/nginx/sites-available con el siguiente contenido recomendado por Laravel<br> 
 
 #################################################################################
 server {
@@ -156,13 +155,14 @@ server {
 #################################################################################
 
 
- --Una vez creado el .conf, se debe crear el enlace simbolico en la carpeta /etc/nginx/sites-enabled/
+ --Una vez creado el .conf, se debe crear el enlace simbolico en la carpeta /etc/nginx/sites-enabled/ <br> 
 sudo ln -s /etc/nginx/sites-available/test_loro.com.conf /etc/nginx/sites-enabled/
 
 
---Se valida la configuración de nginx
+--Se valida la configuración de nginx <br> 
 sudo nginx -t
 
---Se reinicia nginx
-sudo service nginx restart
+--Se reinicia nginx <br> 
+sudo service nginx restart 
 
+Listo
