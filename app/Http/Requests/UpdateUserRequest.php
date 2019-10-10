@@ -29,8 +29,8 @@ class UpdateUserRequest extends FormRequest
             'document' => 'required|numeric|unique:users,document,' . $this->user->id . ',_id',
             'phone' => 'required|numeric|unique:users,phone,' . $this->user->id . ',_id',
             'email' => 'required|string|email|unique:users,email,' . $this->user->id . ',_id',
-            'name' => 'required|alpha_num',
-            'lastname' => 'required|alpha_num'
+            'name' => 'required|regex:/^[\pL\s]+$/u',
+            'lastname' => 'required|regex:/^[\pL\s]+$/u'
         ];
     }
 }

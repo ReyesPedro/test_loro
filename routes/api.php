@@ -15,3 +15,12 @@ use Illuminate\Http\Request;
 
 Route::resource('users', 'UserController');
 
+Route::get('users/{user}/posts', 'UserPostController@index');
+Route::get('users/{user}/posts/{post}', 'UserPostController@show');
+Route::post('users/{user}/posts', 'UserPostController@store');
+Route::put('users/{user}/posts/{post}', 'UserPostController@update');
+Route::delete('users/{user}/posts/{post}', 'UserPostController@destroy');
+
+
+
+
