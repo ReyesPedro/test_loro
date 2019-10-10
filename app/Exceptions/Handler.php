@@ -61,7 +61,7 @@ class Handler extends ExceptionHandler
             break;
             case 'Illuminate\Database\Eloquent\ModelNotFoundException':
                 $errorResponse = [
-                    'message' => 'Documento no encontrado',
+                    'message' => 'Registro no encontrado',
                     'code' => '404'
                 ];
             break;
