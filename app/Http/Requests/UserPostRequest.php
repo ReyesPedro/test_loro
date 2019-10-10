@@ -24,7 +24,7 @@ class UserPostRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|alpha_num',
+            'title' => 'required|regex:/^[\pL\s]+$/u',
             'body' => 'required|string|regex:/^[\pL\s]+$/u|max:255',
         ];
     }
